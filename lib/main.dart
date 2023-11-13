@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cocoa_boutique/menu.dart';
+import 'package:cocoa_boutique/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
