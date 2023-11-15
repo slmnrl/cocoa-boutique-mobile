@@ -17,7 +17,7 @@ class ItemListPage extends StatelessWidget {
             color: Color.fromARGB(255, 98, 21, 35), // Ubah warna teks
           ),
         ),
-        backgroundColor: Color.fromARGB(235, 248, 209, 154),
+        backgroundColor: const Color.fromARGB(235, 248, 209, 154),
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),

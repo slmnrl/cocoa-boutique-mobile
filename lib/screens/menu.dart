@@ -21,7 +21,7 @@ class MyHomePage extends StatelessWidget {
             color: Color.fromARGB(255, 98, 21, 35), // Ubah warna teks
           ),
         ),
-        backgroundColor: Color.fromARGB(235, 248, 209, 154),
+        backgroundColor: const Color.fromARGB(235, 248, 209, 154),
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
@@ -58,11 +58,11 @@ class MyHomePage extends StatelessWidget {
                   Color bgColor = Colors.indigo;
 
                   if (item.name == "Lihat Item") {
-                    bgColor = Color.fromARGB(255, 122, 89, 89); // Misalnya, warna latar belakang untuk "Lihat Item" adalah biru
+                    bgColor = const Color.fromARGB(255, 122, 89, 89); // Misalnya, warna latar belakang untuk "Lihat Item" adalah biru
                   } else if (item.name == "Tambah Item") {
-                    bgColor = Color.fromARGB(255, 175, 124, 76);
+                    bgColor = const Color.fromARGB(255, 175, 124, 76);
                   } else if (item.name == "Logout") {
-                    bgColor = Color.fromARGB(255, 201, 142, 124);
+                    bgColor = const Color.fromARGB(255, 201, 142, 124);
                   }
                   return ShopCard(item, bgColor);
                 }).toList(),

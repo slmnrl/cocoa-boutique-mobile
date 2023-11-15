@@ -33,7 +33,7 @@ class ShopCard extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ShopFormPage(),
+                  builder: (context) => const ShopFormPage(),
                 ));
             
           }

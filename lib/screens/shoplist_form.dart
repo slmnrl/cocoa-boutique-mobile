@@ -28,7 +28,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
             ),
           ),
         ),
-        backgroundColor:  Color.fromARGB(235, 248, 209, 154),
+        backgroundColor:  const Color.fromARGB(235, 248, 209, 154),
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
@@ -117,7 +117,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Color.fromARGB(235, 248, 209, 154),),
+                          MaterialStateProperty.all(const Color.fromARGB(235, 248, 209, 154),),
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -156,8 +156,8 @@ class _ShopFormPageState extends State<ShopFormPage> {
                             );
                           },
                         );
+                        _formKey.currentState!.reset();
                       }
-                      _formKey.currentState!.reset();
                     },
                     child: const Text(
                       "Save",

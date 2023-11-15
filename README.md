@@ -1,5 +1,7 @@
 Nama    : Salma Nurul Aziz
+
 NPM     : 2206028661
+
 Kelas   : PBP C
 
 ## TUGAS 7
@@ -573,7 +575,7 @@ class Item {
 }
 ```
 
-4. Membuat file item_list.dart sebagai halaman yang akan menampilkan item yang telah ditambahkan lalu menambahkan code berikut
+5. Membuat file item_list.dart sebagai halaman yang akan menampilkan item yang telah ditambahkan lalu menambahkan code berikut
 ```
 import 'package:flutter/material.dart';
 import 'package:cocoa_boutique/models/models.dart';
@@ -643,4 +645,4 @@ class ItemListPage extends StatelessWidget {
 }
 ```
 
-5. Memindahkan berkas menu.dart ke direktori widgets agar file lebih tertata
+6. Memindahkan berkas menu.dart ke direktori widgets agar file lebih tertata
