@@ -1,8 +1,4 @@
-Nama    : Salma Nurul Aziz
-
-NPM     : 2206028661
-
-Kelas   : PBP C
+# Cocoa Boutique🍫🫕
 
 ## TUGAS 7
 
@@ -646,3 +642,239 @@ class ItemListPage extends StatelessWidget {
 ```
 
 6. Memindahkan berkas menu.dart ke direktori widgets agar file lebih tertata
+
+## TUGAS 9
+
+### 1. Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
+Ya. Pengambilan data JSON bisa dilakukan dengan menggunakan variabel yang menyimpan _dictionary_ berisi data. Namun, hal ini tidak lebih baik daripada membuat model. Membuat model dapat mempermudah pengambilan data karena suatu objek dapat dipastikan memiliki semua nilai atribut pada kelas.
+
+### 2. Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+CookieRequest adalah salah satu _class_ pasa _package_ `pbp_django_auth.dart`. Beberapa fungsi _class_ CookieRequest:
+- Menyediakan fungsi untuk inisialisasi sesi, login, dan logout sehingga aplikasi dapat mlacak status login dan sesi pengguna
+- Cookies berupa infomrasi sesi tersebut disimpan secara lokal
+- Melakukan permintaan HTTP metode GET dan POST
+
+CookieRequest perlu dibagikan ke semua komponen di aplikasi Flutter dengan tujuan agar status login atau sesi konsisten. Jadi, jika status login atau sesi diubah dalam suatu komponen, maka status login atau sesi di komponen lain akan berubah juga.
+
+### 3. Jelaskan mekanisme pengambilan data dari JSON hingga dapat ditampilkan pada Flutter.
+- Membuat model kustom untuk membuat data JSON
+- Menambahkan dependensi HTTP pada proyek Flutter untuk memperbolehkan akses internet
+- Melakukan fetch data 
+- Menampilkan data dengan widget `FutureBuilder`.
+
+### 4. Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+- Mengambil input pengguna dari form login widget Flutter
+- Mengirim data login dengan HTTP request ke endpoint Django yang bertanggung jawab untuk autentikasi
+- Fungsi view di Django mengautentikasi dengan `authenticate` untuk memeriksa kredensial dan `login` untuk mengautentikasi pengguna.
+- Flutter menerima respons dari server Django
+- Setelah pengguna berhasil login, gunakan Navigator untuk beralih ke halaman menu yang ingin ditampilkan
+
+### 5. Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.
+- Widget `TextField`: Widget yang memungkinkan pengguna memasukkan teks ketika melakukan suatu inpt, misalnya nama pengguna dan kata sandi.
+- Widget `FutureBuilder`: Widget untuk membangun widget secara asinkron. Widget ini digunakan untuk mengelola status loading, error, dan data yang tersedia.
+- Widget `ListView.builder`: Widget yang untuk membuat daftar yang dapat discroll.
+- Widget `Column`: Widget untuk menyusun komponen secara vertikal
+- widget `SizedBox`: Widget untuk menambahkan ruang vertikal
+
+### 6. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
+1. Melakukan integrasi autentikasi Django-Flutter.
+
+Membuat app pada project Django dengan nama `authentication` dan meng-_install_ library `corsheaders`. Lalu, membuat fungsi login dan logout dalam file `views.py` pada app `authentication`.
+
+Dalam project Flutter, _install package_ `pbp_django_auth` dan modifikasi _root_ widget untuk menyediakan _instance_ `CookieRequest` dengan semua komponen pada proyek dalam file `main.dart`
+
+Membuat `login.dart` dalam direktori `lib/screens` untuk menampilkan halaman login.
+
+2. Membuat Model Kustom
+Dengan bantuan situs web Quicktype, buat model JSON dan tambahkan kode nya ke dalam file `models.dart`
+```
+// To parse this JSON data, do
+//
+//     final product = productFromJson(jsonString);
+
+import 'dart:convert';
+
+List<Item> itemFromJson(String str) => List<Item>.from(json.decode(str).map((x) => Item.fromJson(x)));
+
+String itemToJson(List<Item> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Item {
+    String model;
+    int pk;
+    Fields fields;
+
+    Item({
+        required this.model,
+        required this.pk,
+        required this.fields,
+    });
+
+    factory Item.fromJson(Map<String, dynamic> json) => Item(
+        model: json["model"],
+        pk: json["pk"],
+        fields: Fields.fromJson(json["fields"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "model": model,
+        "pk": pk,
+        "fields": fields.toJson(),
+    };
+}
+
+class Fields {
+    String name;
+    int amount;
+    String description;
+    int user;
+
+    Fields({
+        required this.name,
+        required this.amount,
+        required this.description,
+        required this.user,
+    });
+
+    factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+        name: json["name"],
+        amount: json["amount"],
+        description: json["description"],
+        user: json["user"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "amount": amount,
+        "description": description,
+        "user": user,
+    };
+}
+```
+
+3. Menampilkan Halaman Lihat Item
+Pada file `lib/screens/item_list.dart` ganti kode dengan kode berikut untuk menampilkan data 
+```
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:cocoa_boutique/models/models.dart';
+import 'package:cocoa_boutique/widgets/left_drawer.dart';
+
+class ProductPage extends StatefulWidget {
+    const ProductPage({Key? key}) : super(key: key);
+
+    @override
+    _ProductPageState createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+Future<List<Item>> fetchProduct() async {
+    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+    var url = Uri.parse(
+        'https://salma-nurul21-tugas.pbp.cs.ui.ac.id/json/');
+    var response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json"},
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Product
+    List<Item> list_product = [];
+    for (var d in data) {
+        if (d != null) {
+            list_product.add(Item.fromJson(d));
+        }
+    }
+    return list_product;
+}
+
+@override
+Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+        title: const Text('Product'),
+        ),
+        drawer: const LeftDrawer(),
+        body: FutureBuilder(
+            future: fetchProduct(),
+            builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                    return const Center(child: CircularProgressIndicator());
+                } else {
+                    if (!snapshot.hasData) {
+                    return const Column(
+                        children: [
+                        Text(
+                            "Tidak ada data produk.",
+                            style:
+                                TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                        ),
+                        SizedBox(height: 8),
+                        ],
+                    );
+                } else {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, index) => Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Text(
+                                    "${snapshot.data![index].fields.name}",
+                                    style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                    ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text("${snapshot.data![index].fields.price}"),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                        "${snapshot.data![index].fields.description}")
+                                ],
+                                ),
+                            ));
+                    }
+                }
+            }));
+    }
+}
+```
+
+Lalu, tambahkan kode berikut pada `shop_cart.dart` agar widget dapat melakukan routing ketika diklik
+```
+else if (item.name == "Lihat Item") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>  const ProductPage()));
+          }
+          else if (item.name == "Logout") {
+            final response = await request.logout(
+                // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                "http://salma-nurul21-tugas.pbp.cs.ui.ac.id/auth/logout/");
+            String message = response["message"];
+            if (response['status']) {
+              String uname = response["username"];
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message Sampai jumpa, $uname."),
+              ));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("$message"),
+              ));
+            }
+          }
+```
+
+
