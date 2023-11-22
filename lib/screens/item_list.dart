@@ -38,7 +38,7 @@ Future<List<Item>> fetchProduct() async {
 Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Product'),
+        title: const Text('Chocolate Box'),
         ),
         drawer: const LeftDrawer(),
         body: FutureBuilder(
@@ -53,7 +53,7 @@ Widget build(BuildContext context) {
                         Text(
                             "Tidak ada data produk.",
                             style:
-                                TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                                TextStyle(color:Color.fromARGB(255, 98, 21, 35), fontSize: 20),
                         ),
                         SizedBox(height: 8),
                         ],
@@ -77,7 +77,7 @@ Widget build(BuildContext context) {
                                     ),
                                     ),
                                     const SizedBox(height: 10),
-                                    Text("${snapshot.data![index].fields.price}"),
+                                    Text("${snapshot.data![index].fields.amount}"),
                                     const SizedBox(height: 10),
                                     Text(
                                         "${snapshot.data![index].fields.description}")
