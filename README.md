@@ -645,11 +645,11 @@ class ItemListPage extends StatelessWidget {
 
 ## TUGAS 9
 
-### 1. Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
 Ya. Pengambilan data JSON bisa dilakukan dengan menggunakan variabel yang menyimpan _dictionary_ berisi data. Namun, hal ini tidak lebih baik daripada membuat model. Membuat model dapat mempermudah pengambilan data karena suatu objek dapat dipastikan memiliki semua nilai atribut pada kelas.
 
 ### 2. Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
-CookieRequest adalah salah satu _class_ pasa _package_ `pbp_django_auth.dart`. Beberapa fungsi _class_ CookieRequest:
+CookieRequest adalah salah satu _class_ pasa _package_ `pbp_django_auth.dart`. Beberapa fungsi 
+### 1. Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?_class_ CookieRequest:
 - Menyediakan fungsi untuk inisialisasi sesi, login, dan logout sehingga aplikasi dapat mlacak status login dan sesi pengguna
 - Cookies berupa infomrasi sesi tersebut disimpan secara lokal
 - Melakukan permintaan HTTP metode GET dan POST
